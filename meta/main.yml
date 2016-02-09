@@ -102,20 +102,20 @@ galaxy_info:
   #  - 9.1
   #  - 9.2
   #  - 9.3
-  #- name: Ubuntu
-  #  versions:
-  #  - all
-  #  - lucid
-  #  - maverick
-  #  - natty
-  #  - oneiric
-  #  - precise
-  #  - quantal
-  #  - raring
-  #  - saucy
-  #  - trusty
-  #  - utopic
-  #  - vivid
+  - name: Ubuntu
+    versions:
+    - all
+    - lucid
+    - maverick
+    - natty
+    - oneiric
+    - precise
+    - quantal
+    - raring
+    - saucy
+    - trusty
+    - utopic
+    - vivid
   #- name: SLES
   #  versions:
   #  - all
@@ -129,14 +129,14 @@ galaxy_info:
   #  versions:
   #  - all
   #  - any
-  #- name: Debian
-  #  versions:
-  #  - all
-  #  - etch
-  #  - jessie
-  #  - lenny
-  #  - squeeze
-  #  - wheezy
+  - name: Debian
+    versions:
+    - all
+    - etch
+    - jessie
+    - lenny
+    - squeeze
+    - wheezy
   
   galaxy_tags: []
     # List tags for your role here, one per line. A tag is
