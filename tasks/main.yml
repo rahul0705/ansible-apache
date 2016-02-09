@@ -1,2 +1,50 @@
 ---
 # tasks file for ansible-apache
+
+- name: "install apache2"
+  sudo: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - apache2
+    - php5
+    - libapache2-mod-scgi
+  when:
+    ansible_os_family: 'Debian'
+  tags:
+    install
+    php
+    scgi
+
+- name: "enable apache modules"
+  sudo: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php5
+    - scgi
+  notify:
+    - restart apache
+  tags:
+    php
+    scgi
+
+- name: "enable apache ssl modules"
+  sudo: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - rewrite
+    - ssl
+  notify:
+    - restart apache
+  when:
+    - apache_ssl_set
+  tags:
+    ssl
+    rewrite
