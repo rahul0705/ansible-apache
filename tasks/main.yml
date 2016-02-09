@@ -2,7 +2,7 @@
 # tasks file for ansible-apache
 
 - name: "install apache2"
-  sudo: yes
+  become: yes
   apt:
     name: "{{ item }}"
     state: present
@@ -18,7 +18,7 @@
     scgi
 
 - name: "enable apache modules"
-  sudo: yes
+  become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -32,7 +32,7 @@
     scgi
 
 - name: "enable apache ssl modules"
-  sudo: yes
+  become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
