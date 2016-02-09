@@ -12,8 +12,6 @@
     - apache2
     - php5
     - libapache2-mod-scgi
-  when:
-    ansible_os_family: 'Debian'
   tags:
     install
     php
