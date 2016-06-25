@@ -1,5 +1,5 @@
 ---
-- hosts: 192.168.1.149
-  remote_user: rahul
+- hosts: localhost
+  remote_user: root
   roles:
     - ansible-apache
