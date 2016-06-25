@@ -13,15 +13,42 @@
     cache_valid_time: 3600
   with_items:
     - apache2
-    - php
     - libapache2-mod-scgi
-    - libapache2-mod-php
   tags:
     install
+
+- name: "install php5 modules"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - php
+    - libapache2-mod-php
+  when:
+      ansible_distribution "Ubuntu" and ansible_distribution_version == "16.04"
+  tags:
     php
     scgi
 
-- name: "enable apache modules"
+- name: "install php5 modules"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - php5
+  when:
+      ansible_distribution "Ubuntu" and ansible_distribution_version <= "16.04"
+  tags:
+    php
+    scgi
+
+- name: "enable scgi apache modules"
   become: yes
   apache2_module:
     name: "{{ item }}"
@@ -31,6 +58,36 @@
     - scgi
   notify:
     - restart apache
+  tags:
+    php
+    scgi
+
+- name: "enable php7.0 apache modules"
+  become: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php7.0
+  notify:
+    - restart apache
+  when:
+      ansible_distribution "Ubuntu" and ansible_distribution_version == "16.04"
+  tags:
+    php
+    scgi
+
+- name: "enable php apache modules"
+  become: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php
+  notify:
+    - restart apache
+  when:
+      ansible_distribution "Ubuntu" and ansible_distribution_version <= "16.04"
   tags:
     php
     scgi
