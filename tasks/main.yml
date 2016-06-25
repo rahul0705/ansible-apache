@@ -1,6 +1,9 @@
 ---
 # tasks file for ansible-apache
 
+- name: Use correct Apache default sitename
+  set_fact: apache2_default_site="{{ '000-default' if ((ansible_distribution == 'Debian') and (ansible_distribution_version >= '8')) else '000-default' }}"
+
 - name: "install apache2"
   become: yes
   apt:
@@ -10,8 +13,9 @@
     cache_valid_time: 3600
   with_items:
     - apache2
-    - php5
+    - php
     - libapache2-mod-scgi
+    - libapache2-mod-php
   tags:
     install
     php
@@ -23,7 +27,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - php5
+    - php7.0
     - scgi
   notify:
     - restart apache
@@ -46,3 +50,11 @@
   tags:
     ssl
     rewrite
+
+- name: "disable the default sites"
+  become: yes
+  command: a2dissite {{ apache2_default_site }}
+  args:
+    removes: "/etc/apache2/sites-enabled/{{ apache2_default_site }}.conf"
+  notify:
+    - restart apache
