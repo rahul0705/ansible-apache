@@ -17,7 +17,7 @@
   tags:
     install
 
-- name: "install php5 modules"
+- name: "install php modules"
   become: yes
   apt:
     name: "{{ item }}"
@@ -28,7 +28,7 @@
     - php
     - libapache2-mod-php
   when:
-      ansible_distribution "Ubuntu" and ansible_distribution_version == "16.04"
+      ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
   tags:
     php
     scgi
@@ -43,7 +43,7 @@
   with_items:
     - php5
   when:
-      ansible_distribution "Ubuntu" and ansible_distribution_version <= "16.04"
+      ansible_distribution == "Ubuntu" and ansible_distribution_version < "16.04"
   tags:
     php
     scgi
@@ -72,7 +72,7 @@
   notify:
     - restart apache
   when:
-      ansible_distribution "Ubuntu" and ansible_distribution_version == "16.04"
+      ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
   tags:
     php
     scgi
@@ -87,7 +87,7 @@
   notify:
     - restart apache
   when:
-      ansible_distribution "Ubuntu" and ansible_distribution_version <= "16.04"
+      ansible_distribution == "Ubuntu" and ansible_distribution_version < "16.04"
   tags:
     php
     scgi
