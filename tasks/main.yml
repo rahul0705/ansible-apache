@@ -1,2 +1,116 @@
 ---
 # tasks file for ansible-apache
+
+- name: Use correct Apache default sitename
+  set_fact: apache2_default_site="{{ '000-default' if ((ansible_distribution == 'Debian') and (ansible_distribution_version >= '8')) else '000-default' }}"
+
+- name: "install apache2"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - apache2
+    - libapache2-mod-scgi
+  tags:
+    install
+
+- name: "install php7.0 modules"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - php
+    - libapache2-mod-php
+  when:
+      ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
+  tags:
+    php
+    scgi
+
+- name: "install php5 modules"
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - php5
+  when:
+      ansible_distribution == "Ubuntu" and ansible_distribution_version < "16.04"
+  tags:
+    php
+    scgi
+
+- name: "enable scgi apache modules"
+  become: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - scgi
+  notify:
+    - restart apache
+  tags:
+    php
+    scgi
+
+- name: "enable php7.0 apache modules"
+  become: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php7.0
+  notify:
+    - restart apache
+  when:
+      ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
+  tags:
+    php
+    scgi
+
+- name: "enable php5 apache modules"
+  become: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php5
+  notify:
+    - restart apache
+  when:
+      ansible_distribution == "Ubuntu" and ansible_distribution_version < "16.04"
+  tags:
+    php
+    scgi
+
+- name: "enable apache ssl modules"
+  become: yes
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - rewrite
+    - ssl
+  notify:
+    - restart apache
+  when:
+    - apache_ssl_set
+  tags:
+    ssl
+    rewrite
+
+- name: "disable the default sites"
+  become: yes
+  command: a2dissite {{ apache2_default_site }}
+  args:
+    removes: "/etc/apache2/sites-enabled/{{ apache2_default_site }}.conf"
+  notify:
+    - restart apache
