@@ -17,7 +17,7 @@
   tags:
     install
 
-- name: "install php modules"
+- name: "install php7.0 modules"
   become: yes
   apt:
     name: "{{ item }}"
@@ -76,13 +76,13 @@
     php
     scgi
 
-- name: "enable php apache modules"
+- name: "enable php5 apache modules"
   become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
   with_items:
-    - php
+    - php5
   notify:
     - restart apache
   when:
