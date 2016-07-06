@@ -2,7 +2,6 @@
 # tasks file for ansible-apache
 
 - name: "install apache2"
-  become: yes
   apt:
     name: "{{ item }}"
     state: present
@@ -15,7 +14,6 @@
     install
 
 - name: "install php7.0 modules"
-  become: yes
   apt:
     name: "{{ item }}"
     state: present
@@ -31,7 +29,6 @@
     scgi
 
 - name: "install php5 modules"
-  become: yes
   apt:
     name: "{{ item }}"
     state: present
@@ -46,7 +43,6 @@
     scgi
 
 - name: "enable scgi apache modules"
-  become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -59,7 +55,6 @@
     scgi
 
 - name: "enable php7.0 apache modules"
-  become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -74,7 +69,6 @@
     scgi
 
 - name: "enable php5 apache modules"
-  become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -89,7 +83,6 @@
     scgi
 
 - name: "enable apache ssl modules"
-  become: yes
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -105,7 +98,6 @@
     rewrite
 
 - name: "disable the default sites"
-  become: yes
   command: a2dissite {{ item }}
   args:
     removes: "/etc/apache2/sites-enabled/{{ item }}"
