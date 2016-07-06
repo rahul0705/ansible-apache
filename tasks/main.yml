@@ -2,7 +2,7 @@
 # tasks file for ansible-apache
 
 - name: Use correct Apache default sitename
-  set_fact: apache2_default_site="{{ '000-default' if ((ansible_distribution == 'Debian') and (ansible_distribution_version >= '8')) else '000-default' }}"
+  set_fact: apache2_default_site="{{ '000-default' if ((ansible_distribution == 'Debian') and (ansible_distribution_version >= '8')) else 'default' }}"
 
 - name: "install apache2"
   become: yes
