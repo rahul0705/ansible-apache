@@ -1,9 +1,6 @@
 ---
 # tasks file for ansible-apache
 
-- name: Use correct Apache default sitename
-  set_fact: apache2_default_site="{{ '000-default' if ((ansible_distribution == 'Debian') and (ansible_distribution_version >= '8')) else 'default' }}"
-
 - name: "install apache2"
   become: yes
   apt:
@@ -109,8 +106,13 @@
 
 - name: "disable the default sites"
   become: yes
-  command: a2dissite {{ apache2_default_site }}
+  command: a2dissite {{ item }}
   args:
-    removes: "/etc/apache2/sites-enabled/{{ apache2_default_site }}.conf"
+    removes: "/etc/apache2/sites-enabled/{{ item }}"
+  with_items:
+    - 000-default
+    - 000-default.conf
+    - default
+    - default.conf
   notify:
     - restart apache
