@@ -1,0 +1,8 @@
+---
+# vars file for ansible-apache
+
+apache_php_install_modules:
+  - php5
+  - libapache2-mod-php5
+
+apache_php_enable_module: php5.0
