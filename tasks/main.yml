@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-apache
 
-- name: "install apache2"
+- name: Install apache2
   package:
     name: "{{ item }}"
     state: present
@@ -19,7 +19,7 @@
     - "{{ ansible_os_family }}.yml"
     - "default.yml"
 
-- name: "install php modules"
+- name: Install php modules
   package:
     name: "{{ item }}"
     state: present
@@ -28,7 +28,7 @@
     php
     scgi
 
-- name: "enable apache modules"
+- name: Enable apache modules
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -36,12 +36,12 @@
     - scgi
     - "{{ apache_php_enable_module }}"
   notify:
-    - restart apache
+    - Restart apache
   tags:
     php
     scgi
 
-- name: "enable apache ssl modules"
+- name: Enable apache ssl modules
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -49,14 +49,14 @@
     - rewrite
     - ssl
   notify:
-    - restart apache
+    - Restart apache
   when:
     - apache_ssl_set
   tags:
     ssl
     rewrite
 
-- name: "disable the default sites"
+- name: Disable the default sites
   command: a2dissite {{ item }}
   args:
     removes: "/etc/apache2/sites-enabled/{{ item }}"
@@ -66,4 +66,4 @@
     - default
     - default.conf
   notify:
-    - restart apache
+    - Restart apache
