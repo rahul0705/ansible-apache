@@ -11,67 +11,32 @@
   tags:
     install
 
-- name: "install php7.0 modules"
+- name: Load a variable file based on the OS type, or a default if not found.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
+- name: "install php modules"
   package:
     name: "{{ item }}"
     state: present
-  with_items:
-    - php
-    - libapache2-mod-php
-  when:
-      ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
+  with_items: "{{ apache_php_install_modules }}"
   tags:
     php
     scgi
 
-- name: "install php5 modules"
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - php5
-  when:
-      ansible_distribution == "Ubuntu" and ansible_distribution_version < "16.04"
-  tags:
-    php
-    scgi
-
-- name: "enable scgi apache modules"
+- name: "enable apache modules"
   apache2_module:
     name: "{{ item }}"
     state: present
   with_items:
     - scgi
+    - "{{ apache_php_enable_module }}"
   notify:
     - restart apache
-  tags:
-    php
-    scgi
-
-- name: "enable php7.0 apache modules"
-  apache2_module:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - php7.0
-  notify:
-    - restart apache
-  when:
-      ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
-  tags:
-    php
-    scgi
-
-- name: "enable php5 apache modules"
-  apache2_module:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - php5
-  notify:
-    - restart apache
-  when:
-      ansible_distribution == "Ubuntu" and ansible_distribution_version < "16.04"
   tags:
     php
     scgi
