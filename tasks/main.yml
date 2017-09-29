@@ -34,7 +34,7 @@
     state: present
   with_items:
     - scgi
-    - php5
+    - php
   notify:
     - Restart apache
   tags:
